@@ -1,0 +1,41 @@
+# C and C++ build artifacts
+*.o
+*.obj
+*.a
+*.so
+*.out
+*.exe
+build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+
+# Test and coverage artifacts
+*.gcda
+*.gcno
+*.gcov
+coverage/
+Testing/
+
+# Sanitizer and crash output
+core
+core.*
+asan.*
+ubsan.*
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Editors and operating systems
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Runtime files
+*.log
+*.pid
+tmp/
