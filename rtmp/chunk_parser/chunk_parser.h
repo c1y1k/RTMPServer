@@ -34,8 +34,8 @@ public:
 class ReceiveBuffer {
 public:
     std::vector<uint8_t> chunk_buffer;
-    size_t length;
-    size_t parse_pos;
+    size_t length;  //Points to the position after the last element
+    size_t parse_pos;   //Points to where parsing is ready
     size_t capacity, max_cap;//Buffer capacity and maximum capacity, Bytes
 
 public:
@@ -43,14 +43,6 @@ public:
     ~ReceiveBuffer() = default;
 
     void append(const char* data, size_t length);
-};
-
-/* Results Data */
-struct MessageMetadata {
-    uint32_t timestamp = 0;
-    uint32_t message_length = 0;
-    uint8_t message_type_id = 0;
-    uint32_t message_stream_id = 0;
 };
 
 class ChunkParser {
@@ -67,6 +59,14 @@ public:
         CHUNK_READY,
         PROTOCOL_ERROR,
         PARSER_ERROR
+    };
+
+    /* Results Data */
+    struct MessageMetadata {
+        uint32_t timestamp = 0;
+        uint32_t message_length = 0;
+        uint8_t message_type_id = 0;
+        uint32_t message_stream_id = 0;
     };
 
     struct ParseResult {
@@ -99,6 +99,11 @@ public:
     ParseResult ChunkParse();
     std::string Read(int socket_fd, TriggerMode trigger_mode);
     bool SetChunkSize(uint32_t new_chunk_size);
+
+    // Returns a non-owning pointer into receive_buffer.
+    // The pointer becomes invalid after Read() or any operation
+    // that modifies receive_buffer. Copy the payload before then.
+    const uint8_t* GetPayloadPtr(size_t offset, size_t length) const;
 private:
 };
 

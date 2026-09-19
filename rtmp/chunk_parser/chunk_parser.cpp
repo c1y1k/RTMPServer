@@ -306,6 +306,23 @@ ChunkParser::ParseResult ChunkParser::ChunkParse() {
     return {ParseStatus::PARSER_ERROR};
 }
 
+/* Get the chunk payload pointer */
+const uint8_t* ChunkParser::GetPayloadPtr(size_t offset, size_t length) const {
+    if(offset > receive_buffer.length) {
+        return nullptr;
+    }//robustness
+
+    if(length > receive_buffer.length - offset) {
+        return nullptr;
+    }//robustness
+
+    if(length == 0) {
+        return nullptr;
+    }//robustness
+
+    return receive_buffer.chunk_buffer.data() + offset;
+}
+
 /* RTMP connection chunk size setting for receiving data */
 bool ChunkParser::SetChunkSize(uint32_t new_chunk_size){
     if(new_chunk_size == 0 || (new_chunk_size & 0x80000000U) != 0) {
